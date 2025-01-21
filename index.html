@@ -69,6 +69,18 @@
             </section>
         </div>
     </main>
+
+    <dialog class="add-edit-location-modal">
+        <form method="dialog" onsubmit="app.onSaveLoc(event)">
+            <pre class="location-pre">
+                <input type="text" class="loc-name-input" placeholder="enter location name" required>
+                <input type="number" class="loc-rating-input" min="1" max="5" placeholder="enter location rating" required>
+                <button>save</button>
+                <button type="button" class="close-btn" onclick="app.oncloseModal()">x</button>
+            </pre>
+        </form>
+    </dialog>
+
     <pre class="debug" hidden></pre>
     <div class="user-msg"></div>
     <script type="module" src="js/app.controller.js"></script>

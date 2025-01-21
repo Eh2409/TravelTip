@@ -1,0 +1,25 @@
+.add-edit-location-modal {
+    position: relative;
+    padding: 0;
+}
+
+.add-edit-location-modal .location-pre {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    padding: 2em;
+    margin: 0;
+}
+
+.add-edit-location-modal .location-pre>input {
+    width: 200px;
+}
+
+.add-edit-location-modal .close-btn {
+    position: absolute;
+    top: -0.150em;
+    right: -0.150em;
+    border-radius: 0;
+}
