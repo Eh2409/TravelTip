@@ -18,6 +18,8 @@ window.app = {
     onSetFilterBy,
 }
 
+var gUserPos
+
 function onInit() {
     getFilterByFromQueryParams()
     loadAndRenderLocs()
@@ -37,10 +39,18 @@ function renderLocs(locs) {
 
     var strHTML = locs.map(loc => {
         const className = (loc.id === selectedLocId) ? 'active' : ''
+
+        // ex 4
+        // If user-position is known (user pressed the my-position button and approved to
+        // access his position) show distance to locations
+
+        const distance = (gUserPos) ? 'Distance: ' + setDistance(loc) + ' KM' : ''
+
         return `
         <li class="loc ${className}" data-id="${loc.id}">
             <h4>  
                 <span>${loc.name}</span>
+                <span>${distance}</span>
                 <span title="${loc.rate} stars">${'★'.repeat(loc.rate)}</span>
             </h4>
             <p class="muted">
@@ -66,6 +76,13 @@ function renderLocs(locs) {
         displayLoc(selectedLoc)
     }
     document.querySelector('.debug').innerText = JSON.stringify(locs, null, 2)
+}
+
+function setDistance(loc) {
+    const { lat, lng } = loc.geo
+    var latLng = { lat, lng }
+    const distance = utilService.getDistance(gUserPos, latLng, 'K')
+    return distance
 }
 
 function onRemoveLoc(locId) {
@@ -134,6 +151,7 @@ function loadAndRenderLocs() {
 function onPanToUserPos() {
     mapService.getUserPosition()
         .then(latLng => {
+            gUserPos = latLng
             mapService.panTo({ ...latLng, zoom: 15 })
             unDisplayLoc()
             loadAndRenderLocs()
@@ -186,6 +204,11 @@ function displayLoc(loc) {
     el.querySelector('.loc-address').innerText = loc.geo.address
     el.querySelector('.loc-rate').innerHTML = '★'.repeat(loc.rate)
     el.querySelector('[name=loc-copier]').value = window.location
+
+    // ex 4.5
+    const distance = (gUserPos) ? 'Distance: ' + setDistance(loc) + ' KM' : ''
+    el.querySelector('.loc-distance').innerHTML = distance
+
     el.classList.add('show')
 
     utilService.updateQueryParams({ locId: loc.id })
