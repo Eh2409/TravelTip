@@ -13,6 +13,9 @@ body {
     background-color: var(--bg1);
     color: #eee;
     overflow-x: hidden;
+
+    padding: 0;
+    margin: 0;
 }
 
 header {

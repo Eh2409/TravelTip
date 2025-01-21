@@ -4,6 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://kit.fontawesome.com/cbf5806738.js" crossorigin="anonymous"></script>
     <link rel="stylesheet" href="css/main.css">
     <title>TravelTip</title>
 </head>
@@ -21,7 +22,7 @@
         </section>
         <form class="form-search" onsubmit="app.onSearchAddress(event)">
             <input type="text" name="address" placeholder="Search address" />
-            <button title="Search">🔍</button>
+            <button title="Search"><i class="fa-solid fa-magnifying-glass"></i></button>
             <button type="button" title="My Position" onclick="app.onPanToUserPos()" class="btn-user-pos">&nbsp;
             </button>
         </form>
