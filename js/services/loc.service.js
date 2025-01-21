@@ -17,7 +17,7 @@ import { storageService } from './async-storage.service.js'
 
 const PAGE_SIZE = 5
 const DB_KEY = 'locs'
-var gSortBy = { rate: -1 }
+var gSortBy = { rate: -1, creationTime: -1 }
 var gFilterBy = { txt: '', minRate: 0 }
 var gPageIdx
 
@@ -50,8 +50,13 @@ function query() {
                 locs = locs.slice(startIdx, startIdx + PAGE_SIZE)
             }
 
+            // ex 2
+            // Add Sorting by creation time
+
             if (gSortBy.rate !== undefined) {
                 locs.sort((p1, p2) => (p1.rate - p2.rate) * gSortBy.rate)
+            } else if (gSortBy.creationTime !== undefined) {
+                locs.sort((p1, p2) => (p1.createdAt - p2.createdAt) * gSortBy.creationTime)
             } else if (gSortBy.name !== undefined) {
                 locs.sort((p1, p2) => p1.name.localeCompare(p2.name) * gSortBy.name)
             }
