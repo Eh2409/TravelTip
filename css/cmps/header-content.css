@@ -1,0 +1,39 @@
+.header-content>a {
+    width: max-content;
+}
+
+.header-content .main-logo>h1 {
+    font-size: 3em;
+}
+
+.header-content .main-logo>img {
+    width: 40px;
+    margin-inline-end: 0.5em;
+    transition: 300ms;
+    filter: brightness(1) hue-rotate(140deg);
+}
+
+.header-content .main-logo:hover>img {
+    scale: 1.1;
+    filter: brightness(1.2) hue-rotate(70deg);
+    rotate: -20deg;
+}
+
+.header-content>.form-search>* {
+    margin: 0;
+    padding: 10px;
+}
+
+.header-content>.form-search button {
+    font-size: 1em;
+    border-radius: 0;
+    padding: 15px;
+}
+
+.header-content>.form-search .btn-user-pos {
+    margin-inline-start: 0.5em;
+}
+
+.header-content>.form-search input {
+    width: 100%;
+}

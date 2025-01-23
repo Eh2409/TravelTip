@@ -1,6 +1,14 @@
 .add-edit-location-modal {
     position: relative;
     padding: 0;
+    border-radius: 10px;
+    border: none;
+    background-color: var(--bg1);
+    min-width: 50vw;
+
+    backdrop-filter: blur(12.5px);
+    -webkit-backdrop-filter: blur(12.5px);
+    border: 5px solid rgba(255, 255, 255, 0.18);
 }
 
 .add-edit-location-modal .location-pre {
@@ -9,17 +17,22 @@
     justify-content: center;
     align-items: center;
     gap: 10px;
-    padding: 2em;
+    padding: 3em;
     margin: 0;
 }
 
 .add-edit-location-modal .location-pre>input {
-    width: 200px;
+    width: 100%;
+    font-size: 1.2em;
+}
+
+.add-edit-location-modal .location-pre>button {
+    font-size: 1.2em;
 }
 
 .add-edit-location-modal .close-btn {
     position: absolute;
-    top: -0.150em;
-    right: -0.150em;
+    top: -0.100em;
+    right: -0.100em;
     border-radius: 0;
 }

@@ -1,16 +1,19 @@
 .selected-loc {
-    background-color: var(--bg3);
+    background-color: var(--bg4);
     color: whitesmoke;
     max-height: 0em;
     height: 0;
     overflow: hidden;
     transition: .5s;
+    border-radius: 10px;
     box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+    margin-block: 0;
 }
 
 .selected-loc.show {
     height: auto;
     max-height: 15em;
+    margin-block: 0.5em;
     padding: 0.5em;
 }
 

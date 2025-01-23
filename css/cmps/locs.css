@@ -2,6 +2,9 @@
     background-color: var(--bg3);
     padding: 0.5em;
     min-height: 100vh;
+
+    backdrop-filter: blur(12.5px);
+    -webkit-backdrop-filter: blur(12.5px);
 }
 
 .loc-list {
@@ -10,13 +13,19 @@
 }
 
 .loc-list li {
-    padding-bottom: .2em;
-    border-bottom: 1px solid #222;
+    background-color: var(--bg4);
+    padding: 10px;
+    margin-block-end: 0.1em;
+    border-radius: 10px;
+    border: 1px solid rgba(255, 255, 255, 0.18);
 }
 
 .loc-list li h4 {
     display: flex;
     justify-content: space-between;
+    align-items: center;
+    gap: 1em;
+    flex-wrap: wrap;
 }
 
 .loc-list li.active {
@@ -31,6 +40,16 @@
     text-align: end;
 }
 
+.loc-btns button {
+    aspect-ratio: 1/1;
+    font-size: 1.2em;
+}
+
+.locs-container h3 {
+    font-size: 2em;
+}
+
+
 .map {
     width: 100%;
     height: 100vh;
@@ -41,41 +60,47 @@
     text-align: end;
 }
 
-.btn-user-pos {
-    background-color: var(--bg2);
-    background-image: url(../../img/user-loc.png);
-    background-size: cover;
-    width: 2em;
-    height: 2em;
-}
-
-.btn-user-pos:hover {
-    background-color: whitesmoke;
-}
 
 .loc-filter {
-    background-color: var(--bg1);
-    padding: 0.3em;
+    background-color: var(--bg4);
+    padding: 10px;
+    border-radius: 10px;
 }
 
 .loc-filter input[type=text] {
-    width: 98%;
+    width: 100%;
+    padding: 5px;
     margin-bottom: .5em;
 }
 
-.pie {
-    display: inline-block;
-    width: 120px;
-    height: 120px;
+.pie-state {
+    display: grid;
+    place-items: center;
+}
+
+.pie-state>h4 {
+    place-self: start;
+}
+
+.pie-state>.pie {
+    grid-area: 2/1;
+    min-width: 150px;
+    min-height: 150px;
     border-radius: 50%;
-    /* background-image: conic-gradient(orange 0%, orange 64%, blue 64%, blue 81%, black 81%, black 100%); */
-    transition: 400ms;
+    mask: radial-gradient(circle, transparent 40%, black 41%);
+    -webkit-mask: radial-gradient(circle, transparent 40%, black 41%);
+    box-shadow: 3px 3px 3px 1px #ffffff4a inset, -3px -3px 3px 1px #00000052 inset;
+}
+
+.pie-state>.legend {
+    grid-area: 2/2;
 }
 
 .loc-stats ul {
     list-style-type: none;
     display: inline-block;
     text-transform: capitalize;
+    font-size: clamp(1em, 2vw, 1.5em);
 }
 
 .loc-stats .pie-label {
@@ -84,4 +109,26 @@
     width: 1em;
     height: 1em;
     margin-inline-end: 0.3em;
+}
+
+
+.main-range-filter {
+    display: flex;
+    gap: 10px;
+    width: 100%;
+}
+
+.range-label {
+    white-space: nowrap;
+}
+
+.filter-rate-range {
+    width: 100%;
+}
+
+.main-sort-by {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 0.5em;
 }
