@@ -51,12 +51,20 @@ function lookupAddressGeo(geoOrAddress) {
                 address: formatted_address.substring(formatted_address.indexOf(' ')).trim(),
                 lat: geometry.location.lat,
                 lng: geometry.location.lng,
-                zoom: gMap.getZoom()
+                zoom: gMap.getZoom(),
+                img: getStreetViewPhoto(geometry.location.lat, geometry.location.lng)
             }
             // console.log('GEO IS', geo)
             return geo
         })
 
+}
+
+function getStreetViewPhoto(lat, lng) {
+    const url = `https://maps.googleapis.com/maps/api/streetview?size=600x300&location=${lat},${lng}&key=${API_KEY}`
+
+    console.log("Street View URL:", url)
+    return url
 }
 
 function addClickListener(cb) {
@@ -94,7 +102,7 @@ function _connectGoogleApi() {
     if (window.google) return Promise.resolve()
 
     const elGoogleApi = document.createElement('script')
-    elGoogleApi.src = `https://maps.googleapis.com/maps/api/js?key=${API_KEY}`
+    elGoogleApi.src = `https://maps.googleapis.com/maps/api/js?key=${API_KEY}&libraries=places`
     elGoogleApi.async = true
     document.body.append(elGoogleApi)
 

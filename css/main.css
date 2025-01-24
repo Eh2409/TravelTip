@@ -35,6 +35,38 @@
         justify-self: end;
     }
 
+    /* selected-loc */
+
+    .selected-loc {
+        display: grid;
+        grid-template-columns: minmax(50vw, 1fr) 1fr;
+        justify-content: space-between;
+        gap: 10px;
+    }
+
+    .selected-loc.show>.selected-loc-content {
+        display: grid;
+        grid-template-rows: 1fr max-content;
+        grid-column: 1;
+    }
+
+    .selected-loc-buttons {
+        grid-row: 2;
+    }
+
+    .selected-loc-buttons>* {
+        font-size: clamp(1em, 2vw, 1.5em);
+    }
+
+    .selected-loc.show>.loc-img {
+        display: block;
+        grid-column: 2;
+        border-radius: 20px;
+        border: 4px solid rgba(255, 255, 255, 0.18);
+    }
+
+    /* main */
+
     main {
         display: flex;
         flex-direction: row-reverse;

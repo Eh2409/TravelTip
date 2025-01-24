@@ -70,3 +70,9 @@ a {
     color: inherit;
     text-decoration-skip-ink: auto;
 }
+
+img {
+    display: block;
+    width: 100%;
+    height: 100%;
+}

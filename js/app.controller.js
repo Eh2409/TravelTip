@@ -238,6 +238,9 @@ function displayLoc(loc) {
     el.querySelector('.loc-address').innerText = loc.geo.address
     el.querySelector('.loc-rate').innerHTML = '★'.repeat(loc.rate)
     el.querySelector('[name=loc-copier]').value = window.location
+    console.log(loc);
+
+    el.querySelector('.loc-img').src = loc.geo.img
 
     // ex 4.5
     const distance = (gUserPos) ? 'Distance: ' + setDistance(loc) + ' KM' : ''

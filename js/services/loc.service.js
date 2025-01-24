@@ -145,7 +145,8 @@ function _createDemoLocs() {
                     address: "Ben Gurion Airport, 7015001, Israel",
                     lat: 32.0004465,
                     lng: 34.8706095,
-                    zoom: 12
+                    zoom: 12,
+                    img: `https://maps.googleapis.com/maps/api/streetview?size=600x300&location=32.0004465,34.8706095&key=AIzaSyD6jPNpQ1AYA5o6hG38FbUMMyiG_s_nmxI`
                 },
             },
             {
@@ -155,7 +156,9 @@ function _createDemoLocs() {
                     address: "Derekh Mitsrayim 1, Eilat, 88000, Israel",
                     lat: 29.5393848,
                     lng: 34.9457792,
-                    zoom: 15
+                    zoom: 15,
+                    img: `https://maps.googleapis.com/maps/api/streetview?size=600x300&location=29.5393848,34.9457792&key=AIzaSyD6jPNpQ1AYA5o6hG38FbUMMyiG_s_nmxI`
+
                 },
             },
             {
@@ -165,7 +168,9 @@ function _createDemoLocs() {
                     address: "Dahab, South Sinai, Egypt",
                     lat: 28.5096676,
                     lng: 34.5165187,
-                    zoom: 11
+                    zoom: 11,
+                    img: `https://maps.googleapis.com/maps/api/streetview?size=600x300&location=28.5096676,34.5165187&key=AIzaSyD6jPNpQ1AYA5o6hG38FbUMMyiG_s_nmxI`
+
                 }
             }
         ]

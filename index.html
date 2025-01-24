@@ -32,12 +32,19 @@
             </form>
         </section>
         <section class="selected-loc">
-            <h2>Location: <span class="loc-name"></span> <span class="loc-rate"></span></h2>
-            <h4 class="loc-address"></h4>
-            <h4 class="loc-distance"></h4>
-            <button onclick="app.onCopyLoc()">Copy location</button>
-            <button onclick="app.onShareLoc()">Share location</button>
-            <input name="loc-copier" />
+            <div class="selected-loc-content">
+                <div>
+                    <h2>Location: <span class="loc-name"></span> <span class="loc-rate"></span></h2>
+                    <h4 class="loc-address"></h4>
+                    <h4 class="loc-distance"></h4>
+                </div>
+                <div class="selected-loc-buttons">
+                    <button onclick="app.onCopyLoc()">Copy location</button>
+                    <button onclick="app.onShareLoc()">Share location</button>
+                </div>
+                <input name="loc-copier" />
+            </div>
+            <img src="" class="loc-img">
         </section>
     </header>
 
@@ -106,6 +113,7 @@
 
     <pre class="debug" hidden></pre>
     <div class="user-msg"></div>
+
     <script type="module" src="js/app.controller.js"></script>
 </body>
 
