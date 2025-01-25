@@ -338,6 +338,9 @@ function onSetFilterBy({ txt, minRate }) {
     const filterBy = locService.setFilterBy({ txt, minRate: +minRate })
     utilService.updateQueryParams(filterBy)
     loadAndRenderLocs()
+
+    const elMineRte = document.querySelector('.min-rate')
+    elMineRte.innerHTML = minRate
 }
 
 function renderLocStats() {
