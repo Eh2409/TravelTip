@@ -18,10 +18,16 @@ window.app = {
     onSetFilterBy,
     onSaveLoc,
     oncloseModal,
+    onSlide,
 }
 
 var gUserPos
 var gSelectedLocId = null
+
+/// SLIDER VARS
+var gMoveSlider
+var gActiveImage = 0
+var gIsForward = true
 
 function onInit() {
     getFilterByFromQueryParams()
@@ -35,6 +41,10 @@ function onInit() {
             console.error('OOPs:', err)
             flashMsg('Cannot init map')
         })
+
+    window.addEventListener('resize', () => {
+        onSlide()
+    })
 }
 
 function renderLocs(locs) {
@@ -195,7 +205,11 @@ function oncloseModal() {
 
 function loadAndRenderLocs() {
     locService.query()
-        .then(renderLocs)
+        .then(res => {
+            renderLocs(res)
+            gActiveImage = 0
+            renderSlider(res)
+        })
         .catch(err => {
             console.error('OOPs:', err)
             flashMsg('Cannot load locations')
@@ -385,4 +399,66 @@ function cleanStats(stats) {
         return acc
     }, [])
     return cleanedStats
+}
+
+
+// slider 
+
+function renderSlider(locs) {
+    var strHTML = locs.map(loc => {
+        return `
+         <div class="loc-item-img">
+        <div class="loc-name">${loc.name}</div>
+        <img src="${loc.geo.img}" alt="" class="loc-image-slide">
+        </div>`}).join('')
+
+    const elWrapper = document.querySelector('.wrapper')
+    elWrapper.innerHTML = strHTML || '<img src="img/no-loc-img.jpg" alt="no-img-loc" class="no-img">'
+
+    sliderAutoMove()
+}
+
+
+function sliderAutoMove() {
+    if (gMoveSlider) return
+    const elItems = document.querySelectorAll('.loc-item-img')
+
+    if (elItems.length === 1) return
+    gMoveSlider = setInterval(() => {
+        if (gIsForward) {
+            if (gActiveImage < elItems.length - 1) {
+                gActiveImage++
+            } else {
+                gIsForward = false;
+                gActiveImage--
+            }
+        } else {
+            if (gActiveImage > 0) {
+                gActiveImage--
+            } else {
+                gIsForward = true
+                gActiveImage++
+            }
+        }
+        onSlide();
+    }, 1000 * 10)
+}
+
+function onSlide(diff = 0) {
+    const elWrapper = document.querySelector('.wrapper')
+    const elItems = document.querySelectorAll('.loc-item-img')
+
+    if (gMoveSlider && diff != 0) {
+        clearInterval(gMoveSlider)
+        gMoveSlider = null
+        setTimeout(sliderAutoMove, 1000 * 20)
+    }
+
+    var currActive = gActiveImage + diff
+    if (currActive > elItems.length - 1 || currActive < 0) return
+
+    gActiveImage = currActive
+    const move = elItems[gActiveImage].offsetWidth * gActiveImage
+
+    elWrapper.scrollLeft = move
 }

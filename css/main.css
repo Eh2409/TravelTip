@@ -6,6 +6,7 @@
 @import url(cmps/locs.css);
 @import url(cmps/selected-loc.css);
 @import url(cmps/add-edit-location-modal.css);
+@import url(cmps/slider.css);
 
 @media (min-width: 850px) {
 
@@ -83,5 +84,19 @@
         align-items: center;
         gap: 10px;
     }
+
+    .slider {
+        width: 60vw;
+        height: 80vh;
+        margin: 10px 10px;
+        place-self: center;
+    }
+
+    .slider>.wrapper>.no-img,
+    .slider>.wrapper>.loc-item-img>.loc-image-slide {
+        width: 60vw;
+        height: 80vh;
+    }
+
 
 }
