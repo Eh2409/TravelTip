@@ -15,11 +15,10 @@ import { storageService } from './async-storage.service.js'
 //     updatedAt: 1706562160181
 // }
 
-const PAGE_SIZE = 5
 const DB_KEY = 'locs'
 var gSortBy = { rate: -1, creationTime: -1 }
 var gFilterBy = { txt: '', minRate: 0 }
-var gPageIdx
+var gPage = { idx: 0, size: 3, pageCount: 0 }
 
 _createLocs()
 
@@ -31,7 +30,9 @@ export const locService = {
     setFilterBy,
     setSortBy,
     getLocCountByRateMap,
-    getLocCountByLastUpdated
+    getLocCountByLastUpdated,
+    getPageCount,
+    setCurrPage
 }
 
 function query() {
@@ -47,12 +48,6 @@ function query() {
                 locs = locs.filter(loc => loc.rate >= gFilterBy.minRate)
             }
 
-            // No paging (unused)
-            if (gPageIdx !== undefined) {
-                const startIdx = gPageIdx * PAGE_SIZE
-                locs = locs.slice(startIdx, startIdx + PAGE_SIZE)
-            }
-
             // ex 2
             // Add Sorting by creation time
 
@@ -64,8 +59,25 @@ function query() {
                 locs.sort((p1, p2) => p1.name.localeCompare(p2.name) * gSortBy.name)
             }
 
+
+            // No paging (unused)
+            if (gPage !== undefined) {
+                gPage.pageCount = Math.ceil(locs.length / gPage.size)
+                const startIdx = gPage.idx * gPage.size
+                locs = locs.slice(startIdx, startIdx + gPage.size)
+            }
+
             return locs
         })
+}
+
+function getPageCount() {
+    return gPage.pageCount
+}
+
+function setCurrPage(pageNum) {
+    gPage.idx = pageNum
+    console.log(gPage.pageCount);
 }
 
 function getById(locId) {
@@ -111,8 +123,6 @@ function getLocCountByLastUpdated() {
     return storageService.query(DB_KEY)
         .then(locs => {
             const locCountByLastUpdatedMap = locs.reduce((map, loc) => {
-                console.log(loc)
-
                 if (dateNow - loc.updatedAt < 1000 * 60 * 60 * 24) map.today++
                 else if (loc.createdAt !== loc.updatedAt) map.past++
                 else map.never++

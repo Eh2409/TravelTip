@@ -19,6 +19,8 @@ window.app = {
     onSaveLoc,
     oncloseModal,
     onSlide,
+    onSetCurrPage,
+    onPageMove,
 }
 
 var gUserPos
@@ -29,8 +31,16 @@ var gMoveSlider
 var gActiveImage = 0
 var gIsForward = true
 
+///
+var gQueryParams = { locId: '', pageId: 0, txt: '', minRate: 0, sortBy: 'rate', dir: '' }
+
 function onInit() {
+
+    setgQueryParams()
     getFilterByFromQueryParams()
+    onSetCurrPage(getpageIdFromQueryParams())
+    setSortByFromQueryParams()
+
     loadAndRenderLocs()
     mapService.initMap()
         .then(() => {
@@ -86,7 +96,10 @@ function renderLocs(locs) {
 
     if (selectedLocId) {
         const selectedLoc = locs.find(loc => loc.id === selectedLocId)
-        displayLoc(selectedLoc)
+        if (selectedLoc) {
+            displayLoc(selectedLoc)
+        }
+
     }
     document.querySelector('.debug').innerText = JSON.stringify(locs, null, 2)
 }
@@ -187,7 +200,8 @@ function onSaveLoc(ev) {
         locService.save(loc)
             .then((savedLoc) => {
                 flashMsg(`Added Location (id: ${savedLoc.id})`)
-                utilService.updateQueryParams({ locId: savedLoc.id })
+                gQueryParams.locId = savedLoc.id
+                setUpdateQueryParams()
                 loadAndRenderLocs()
             })
             .catch(err => {
@@ -197,10 +211,14 @@ function onSaveLoc(ev) {
     }
 
     elModal.close()
+    const elFrom = document.querySelector('.add-edit-location-modal form')
+    elFrom.reset()
 }
 function oncloseModal() {
     const elModal = document.querySelector('.add-edit-location-modal')
     elModal.close()
+    const elFrom = document.querySelector('.add-edit-location-modal form')
+    elFrom.reset()
 }
 
 function loadAndRenderLocs() {
@@ -209,6 +227,7 @@ function loadAndRenderLocs() {
             renderLocs(res)
             gActiveImage = 0
             renderSlider(res)
+            renderPages()
         })
         .catch(err => {
             console.error('OOPs:', err)
@@ -262,11 +281,13 @@ function displayLoc(loc) {
 
     el.classList.add('show')
 
-    utilService.updateQueryParams({ locId: loc.id })
+    gQueryParams.locId = loc.id
+    setUpdateQueryParams()
 }
 
 function unDisplayLoc() {
-    utilService.updateQueryParams({ locId: '' })
+    gQueryParams.locId = ''
+    setUpdateQueryParams()
     document.querySelector('.selected-loc').classList.remove('show')
     mapService.setMarker(null)
 }
@@ -306,6 +327,9 @@ function getFilterByFromQueryParams() {
     const minRate = queryParams.get('minRate') || 0
     locService.setFilterBy({ txt, minRate })
 
+    const elMineRte = document.querySelector('.min-rate')
+    elMineRte.innerHTML = minRate
+
     document.querySelector('input[name="filter-by-txt"]').value = txt
     document.querySelector('input[name="filter-by-rate"]').value = minRate
 }
@@ -316,6 +340,19 @@ function getLocIdFromQueryParams() {
     return locId
 }
 
+function setSortByFromQueryParams() {
+    const queryParams = new URLSearchParams(window.location.search)
+    const sortBy = queryParams.get('sortBy')
+    const dir = queryParams.get('dir')
+    console.log(dir);
+    console.log(gQueryParams);
+
+    document.querySelector('.sort-by').value = sortBy
+    if (dir === 'checked') document.querySelector('.sort-desc').checked = true
+
+    // onSetSortBy()
+}
+
 function onSetSortBy() {
     const prop = document.querySelector('.sort-by').value
     const isDesc = document.querySelector('.sort-desc').checked
@@ -324,6 +361,10 @@ function onSetSortBy() {
 
     const sortBy = {}
     sortBy[prop] = (isDesc) ? -1 : 1
+    gQueryParams.sortBy = prop
+    gQueryParams.dir = (isDesc) ? 'checked' : ''
+
+    setUpdateQueryParams()
 
     // Shorter Syntax:
     // const sortBy = {
@@ -335,12 +376,18 @@ function onSetSortBy() {
 }
 
 function onSetFilterBy({ txt, minRate }) {
-    const filterBy = locService.setFilterBy({ txt, minRate: +minRate })
-    utilService.updateQueryParams(filterBy)
+    locService.setFilterBy({ txt, minRate: +minRate })
+    if (txt === undefined) gQueryParams.txt = gQueryParams.txt
+    else gQueryParams.txt = txt
+    if (minRate) gQueryParams.minRate = +minRate
+
+
+    onSetCurrPage()
+    setUpdateQueryParams()
     loadAndRenderLocs()
 
     const elMineRte = document.querySelector('.min-rate')
-    elMineRte.innerHTML = minRate
+    elMineRte.innerHTML = gQueryParams.minRate
 }
 
 function renderLocStats() {
@@ -465,3 +512,70 @@ function onSlide(diff = 0) {
 
     elWrapper.scrollLeft = move
 }
+
+//// pagination
+
+function renderPages() {
+    const elPagesBtns = document.querySelector('.pages-btns')
+    var pageCount = locService.getPageCount()
+    var currPage = getpageIdFromQueryParams()
+    var strHtml = ''
+
+    for (let i = currPage - 2; i <= currPage + 2; i++) {
+        if (i < 0 || i > pageCount - 1) continue
+        strHtml += `<button onclick="app.onSetCurrPage(${i})" class="page-btn num-${i}">${i + 1}</button>`
+    }
+
+    elPagesBtns.innerHTML = strHtml
+    setActivePageBtn(currPage)
+}
+
+function onSetCurrPage(pageId = 0) {
+    // modal
+    locService.setCurrPage(pageId)
+    gQueryParams.pageId = pageId
+    setUpdateQueryParams()
+    // dom
+    loadAndRenderLocs()
+}
+
+function onPageMove(dif) {
+    var currPage = getpageIdFromQueryParams()
+    var pageCount = locService.getPageCount()
+    var pageNum = currPage + dif
+    if (pageNum < 0 || pageNum > pageCount - 1) return
+    onSetCurrPage(pageNum)
+}
+
+function setActivePageBtn(pageId) {
+    const elPagesBtns = document.querySelectorAll('.page-btn')
+    if (!elPagesBtns.length) return
+
+    console.log(`.page-btn.num-${gQueryParams.pageId}`);
+    console.log(document.querySelector(`.page-btn.num-${gQueryParams.pageId}`));
+
+
+    document.querySelector(`.page-btn.num-${gQueryParams.pageId}`).classList.remove('active')
+    document.querySelector(`.page-btn.num-${pageId}`).classList.add('active')
+}
+
+function getpageIdFromQueryParams() {
+    const queryParams = new URLSearchParams(window.location.search)
+    const pageId = +queryParams.get('pageId') || 0
+    return pageId
+}
+
+function setUpdateQueryParams() {
+    utilService.updateQueryParams(gQueryParams)
+}
+
+function setgQueryParams() {
+    const queryParams = new URLSearchParams(window.location.search)
+    gQueryParams.locId = queryParams.get('locId') || ''
+    gQueryParams.pageId = +queryParams.get('pageId') || 0
+    gQueryParams.txt = queryParams.get('txt') || ''
+    gQueryParams.minRate = +queryParams.get('minRate') || 0
+    gQueryParams.sortBy = queryParams.get('sortBy') || 'rate'
+    gQueryParams.dir = queryParams.get('dir') || ''
+    utilService.updateQueryParams(gQueryParams)
+} 

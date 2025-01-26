@@ -132,3 +132,19 @@
     flex-wrap: wrap;
     gap: 0.5em;
 }
+
+.loc-pagination {
+    display: flex;
+    justify-self: center;
+    align-items: center;
+}
+
+.loc-pagination>button,
+.loc-pagination>.pages-btns>button {
+    font-size: clamp(1em, 1.5vw, 1.5em);
+}
+
+.loc-pagination>.pages-btns>button.active {
+    border: 2px solid var(--bg3);
+    color: var(--color2);
+}
