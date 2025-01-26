@@ -12,7 +12,7 @@
 - [Controller](#controller)
 - [Installation](#installation)
 - [How to Use](#how-to-use)
-- [License](#license)
+- [Site Preview](#site-preview)
 
 
 ## Description
