@@ -184,6 +184,7 @@ function onSaveLoc(ev) {
                     .then(savedLoc => {
                         flashMsg(`The location has been successfully updated!`)
                         loadAndRenderLocs()
+                        // setFilterByName(savedLoc)
                     })
                     .catch(err => {
                         console.error('OOPs:', err)
@@ -201,8 +202,8 @@ function onSaveLoc(ev) {
             .then((savedLoc) => {
                 flashMsg(`Added Location (id: ${savedLoc.id})`)
                 gQueryParams.locId = savedLoc.id
-                setUpdateQueryParams()
                 loadAndRenderLocs()
+                setSortByToCreationTime()
             })
             .catch(err => {
                 console.error('OOPs:', err)
@@ -214,11 +215,33 @@ function onSaveLoc(ev) {
     const elFrom = document.querySelector('.add-edit-location-modal form')
     elFrom.reset()
 }
+
 function oncloseModal() {
     const elModal = document.querySelector('.add-edit-location-modal')
     elModal.close()
     const elFrom = document.querySelector('.add-edit-location-modal form')
     elFrom.reset()
+}
+
+// Because of the pagination, I wanted that when updating a location it would not disappear due to a change of order due to the sorting by name / rating,
+//  but the function does not work 100 percent, so I still need to check options
+
+// function setFilterByName(loc) {
+//     gQueryParams.txt = loc.name
+//     setUpdateQueryParams()
+//     getFilterByFromQueryParams()
+//     onSetCurrPage()
+// }
+
+// Because of the pagination, this function makes sure that when adding a new location,
+// the list is updated according to the order of creation and the new location is first in the list
+
+function setSortByToCreationTime() {
+    gQueryParams.sortBy = 'creationTime'
+    gQueryParams.dir = 'checked'
+    setUpdateQueryParams()
+    setSortByFromQueryParams()
+    onSetCurrPage()
 }
 
 function loadAndRenderLocs() {
@@ -350,7 +373,7 @@ function setSortByFromQueryParams() {
     document.querySelector('.sort-by').value = sortBy
     if (dir === 'checked') document.querySelector('.sort-desc').checked = true
 
-    // onSetSortBy()
+    onSetSortBy()
 }
 
 function onSetSortBy() {
